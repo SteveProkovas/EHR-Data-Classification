@@ -12,11 +12,6 @@ This project aims to develop robust machine learning models for classifying Elec
 - **Comprehensive Evaluation**: Evaluate model performance using accuracy, precision, recall, F1-score, ROC AUC, and confusion matrix. Advanced interpretation tools include feature importances and SHAP values.
 - **Scalability**: Designed to handle large-scale EHR datasets efficiently through optimized preprocessing and model training pipelines.
 
-## Installation
-
-1. **Clone the repository**: `git clone https://github.com/your-username/EHR-Data-Classification.git`
-2. **Install dependencies**: `pip install -r requirements.txt`
-
 ## Usage
 
 1. **Prepare Data**: Place your EHR dataset in the `data/raw` directory.
