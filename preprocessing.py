@@ -3,7 +3,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.exceptions import NotFittedError
 
 def load_data(file_path):
     """
@@ -118,7 +117,7 @@ def encode_and_normalize_features(data):
         transformers=[
             ('cat', OneHotEncoder(), ['categorical_feature1', 'categorical_feature2']),
             ('num', StandardScaler(), ['numerical_feature1', 'numerical_feature2'])
-        ])
+        ], remainder='passthrough')  # Remainder columns are passed through without any transformation
     
     data = pd.DataFrame(preprocessor.fit_transform(data))
     
