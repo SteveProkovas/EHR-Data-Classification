@@ -1,44 +1,52 @@
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, plot_confusion_matrix
 import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-def build_model(model_type='random_forest', preprocessing_pipeline=None):
+def build_model(model_type='ensemble', preprocessing_pipeline=None):
     """
     Build a machine learning model pipeline.
     
     Args:
-    model_type (str): Type of machine learning model to build. Options: 'random_forest', 'logistic_regression', 'svm'.
+    model_type (str): Type of machine learning model to build. Options: 'ensemble', 'random_forest', 'logistic_regression', 'svm'.
     preprocessing_pipeline (sklearn.pipeline.Pipeline): Preprocessing pipeline.
     
     Returns:
     sklearn.pipeline.Pipeline: Machine learning model pipeline.
     """
-    if model_type == 'random_forest':
+    if model_type == 'ensemble':
+        model_rf = RandomForestClassifier(random_state=42)
+        model_lr = LogisticRegression(max_iter=1000, random_state=42)
+        model_svm = SVC(probability=True, random_state=42)
+        model = VotingClassifier(estimators=[('rf', model_rf), ('lr', model_lr), ('svm', model_svm)], voting='soft')
+        params = {}  # No hyperparameters to tune for ensemble methods
+    elif model_type == 'random_forest':
         model = RandomForestClassifier(random_state=42)
         params = {
-            'model__n_estimators': [100, 200, 300],
-            'model__max_depth': [None, 10, 20],
-            'model__min_samples_split': [2, 5, 10]
+            'n_estimators': [100, 200, 300],
+            'max_depth': [None, 10, 20],
+            'min_samples_split': [2, 5, 10]
         }
     elif model_type == 'logistic_regression':
         model = LogisticRegression(max_iter=1000, random_state=42)
         params = {
-            'model__C': [0.1, 1, 10],
-            'model__penalty': ['l1', 'l2']
+            'C': [0.1, 1, 10],
+            'penalty': ['l1', 'l2']
         }
     elif model_type == 'svm':
         model = SVC(probability=True, random_state=42)
         params = {
-            'model__C': [0.1, 1, 10],
-            'model__gamma': ['scale', 'auto'],
-            'model__kernel': ['linear', 'rbf']
+            'C': [0.1, 1, 10],
+            'gamma': ['scale', 'auto'],
+            'kernel': ['linear', 'rbf']
         }
     else:
-        raise ValueError("Invalid model_type. Choose from 'random_forest', 'logistic_regression', or 'svm'.")
+        raise ValueError("Invalid model_type. Choose from 'ensemble', 'random_forest', 'logistic_regression', or 'svm'.")
     
     steps = []
     if preprocessing_pipeline:
@@ -77,15 +85,24 @@ def evaluate_model(model, X_test, y_test):
     y_test (pd.Series): Target variable of the test dataset.
     """
     y_pred = model.predict(X_test)
+    y_prob = model.predict_proba(X_test)[:, 1]
     accuracy = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
+    roc_auc = roc_auc_score(y_test, y_prob)
     
     print("Accuracy:", accuracy)
     print("Precision:", precision)
     print("Recall:", recall)
     print("F1-score:", f1)
+    print("ROC AUC:", roc_auc)
+
+    # Plot confusion matrix
+    plt.figure(figsize=(8, 6))
+    plot_confusion_matrix(model, X_test, y_test, cmap='Blues', normalize='true')
+    plt.title('Confusion Matrix')
+    plt.show()
 
 def save_model(model, filepath):
     """
@@ -118,10 +135,17 @@ def main():
     
     preprocessing_pipeline = None  # Add your preprocessing pipeline
     
+    # Ensemble Model
+    pipeline_ensemble, params_ensemble = build_model(model_type='ensemble', preprocessing_pipeline=preprocessing_pipeline)
+    trained_model_ensemble = train_model(pipeline_ensemble, params_ensemble, X_train, y_train)
+    print("Ensemble Model:")
+    evaluate_model(trained_model_ensemble, X_test, y_test)
+    save_model(trained_model_ensemble, 'trained_model_ensemble.pkl')
+
     # Random Forest
     pipeline_rf, params_rf = build_model(model_type='random_forest', preprocessing_pipeline=preprocessing_pipeline)
     trained_model_rf = train_model(pipeline_rf, params_rf, X_train, y_train)
-    print("Random Forest Model:")
+    print("\nRandom Forest Model:")
     evaluate_model(trained_model_rf, X_test, y_test)
     save_model(trained_model_rf, 'trained_model_rf.pkl')
     
@@ -140,6 +164,7 @@ def main():
     save_model(trained_model_svm, 'trained_model_svm.pkl')
     
     # Load the saved models
+    loaded_model_ensemble = load_model('trained_model_ensemble.pkl')
     loaded_model_rf = load_model('trained_model_rf.pkl')
     loaded_model_lr = load_model('trained_model_lr.pkl')
     loaded_model_svm = load_model('trained_model_svm.pkl')
