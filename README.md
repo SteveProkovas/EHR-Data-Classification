@@ -1,73 +1,50 @@
 # Healthcare Analytics with Electronic Health Records (EHR)
 
-Healthcare analytics leveraging Electronic Health Records (EHR) can provide valuable insights into patient outcomes and health risks. This README outlines the steps to preprocess EHR data, perform feature engineering, select and train machine learning models, evaluate model performance, make predictions, and deploy the trained model effectively.
+This repository contains Python scripts for conducting healthcare analytics with Electronic Health Records (EHR) data. The scripts provide a comprehensive framework for data preprocessing, feature engineering, model development, evaluation, and interpretation.
 
-## Data Preprocessing:
+## Overview
 
-### Load and Preprocess the EHR Dataset:
-- Utilize Julia's DataFrames.jl library to load the dataset.
-- Clean the data by removing duplicates and irrelevant columns.
+1. **[preprocessing.py](preprocessing.py)**: Python script for data preprocessing.
+   - Load and preprocess the EHR dataset.
+   - Clean the data, handle missing values, encode categorical variables, and normalize numerical features.
+   - Split the dataset into training and testing sets.
 
-### Handle Missing Values, Encode Categorical Variables, and Normalize Numerical Features:
-- Implement techniques like mean imputation or predictive imputation to handle missing values.
-- Encode categorical variables using one-hot encoding or label encoding.
-- Normalize numerical features to ensure uniform scale across different features.
+2. **[feature_engineering.py](feature_engineering.py)**: Python script for feature engineering.
+   - Extract relevant features from the EHR data.
+   - Perform feature selection to select the most informative features.
 
-### Split the Dataset into Training and Testing Sets:
-- Split the dataset into training and testing sets, maintaining a suitable ratio (e.g., 80% training, 20% testing).
-- Ensure similar class distributions in both training and testing sets.
+3. **[model.py](model.py)**: Python script for defining machine learning models.
+   - Choose appropriate machine learning algorithms (e.g., logistic regression, random forest, SVM) for classification tasks.
+   - Train multiple models, evaluate their performance, and fine-tune hyperparameters.
 
-## Feature Engineering:
+4. **[evaluation.py](evaluation.py)**: Python script for model evaluation and interpretation.
+   - Evaluate the performance of trained models using various metrics (accuracy, precision, recall, F1-score, ROC AUC).
+   - Interpret the models by analyzing feature importances and generating SHAP (SHapley Additive exPlanations) summary plots.
 
-### Extract Relevant Features from the EHR Data:
-- Identify pertinent features such as patient demographics, medical conditions, medications, procedures, lab results, and visit frequency.
-- Consult with healthcare professionals to ascertain the most relevant features.
+## Usage
 
-### Perform Feature Selection:
-- Employ techniques like correlation analysis or feature importance scores to select informative features.
-- Avoid overfitting by selecting features predictive of patient outcomes or health risks.
+1. **Data Preprocessing**: 
+   - Customize the preprocessing steps in [preprocessing.py](preprocessing.py) based on your specific dataset and requirements.
 
-## Model Selection and Training:
+2. **Feature Engineering**: 
+   - Modify feature extraction and selection techniques in [feature_engineering.py](feature_engineering.py) according to your analysis goals.
 
-### Choose Appropriate Machine Learning Algorithms:
-- Experiment with algorithms suitable for classification tasks, such as logistic regression, random forest, gradient boosting, SVM, or neural networks.
-- Consider trade-offs between model complexity, interpretability, and performance.
+3. **Model Development**: 
+   - Choose suitable machine learning algorithms and hyperparameters in [model.py](model.py) and train the models on your preprocessed data.
 
-### Train Multiple Models and Evaluate Performance:
-- Train each selected model using the training data.
-- Utilize cross-validation techniques to assess generalization performance.
-- Evaluate metrics like accuracy, precision, recall, F1-score, and area under the ROC curve for model comparison.
+4. **Model Evaluation and Interpretation**: 
+   - Use [evaluation.py](evaluation.py) to evaluate the performance of trained models and interpret their results to gain insights into feature importance and individual predictions.
 
-## Model Evaluation:
+## Prerequisites
 
-### Evaluate Trained Models on Testing Data:
-- Assess model performance on testing data to gauge effectiveness in predicting patient outcomes or health risks.
-- Compare evaluation metrics across different models to identify the best-performing one.
+- Python 3.x
+- Required Python libraries: `scikit-learn`, `matplotlib`, `seaborn`, `shap`
 
-### Fine-Tune Hyperparameters:
-- Conduct hyperparameter tuning using techniques like grid search or random search to optimize model performance.
-- Fine-tune hyperparameters to improve accuracy or F1-score while preventing overfitting.
+## License
 
-## Prediction and Interpretation:
+This project is licensed under the terms of the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
-### Make Predictions on New Patient Data:
-- Utilize the trained model to make predictions on new patient data.
-- Evaluate model predictions for reliability and accuracy.
+## Notes
 
-### Interpret Model Predictions:
-- Analyze feature importance to understand their influence on predictions.
-- Interpret the model's decision-making process to identify key factors contributing to patient outcomes or health risks.
-
-## Deployment:
-
-### Deploy the Trained Model:
-- Deploy the trained model as a predictive analytics tool for healthcare professionals.
-- Integrate the model into healthcare systems or EHR platforms to aid in patient care and decision-making.
-
-### Provide User Support and Maintenance:
-- Offer user support and training to healthcare professionals for effective utilization of the predictive analytics tool.
-- Regularly update the model with new data and retrain it to maintain predictive accuracy.
-
-## License:
-
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+- Ensure compatibility of the models with the evaluation and interpretation techniques used in [evaluation.py](evaluation.py).
+- Customize the scripts according to your specific dataset, analysis goals, and preferences.
