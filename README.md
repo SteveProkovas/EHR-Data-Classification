@@ -20,7 +20,7 @@ This project aims to develop robust machine learning models for classifying Elec
 4. **Model Training**: Run `model.py` to train machine learning models on the preprocessed data.
 5. **Model Evaluation**: Use `evaluation.py` to evaluate the performance of trained models and interpret results.
 
-## Advanced Techniques
+## Techniques
 
 - **Hyperparameter Tuning**: Experiment with advanced hyperparameter tuning techniques such as RandomizedSearchCV or Bayesian optimization for optimizing model performance.
 - **Class Imbalance Handling**: Implement techniques like oversampling, undersampling, or using class-weighting strategies to handle imbalanced classes in the dataset.
